@@ -1,15 +1,37 @@
 package main
 
 import (
+	"bufio"
+	"fmt"
+	"os"
 	"strings"
 )
 
 func cleanInput(text string) []string {
 	loweredText := strings.ToLower(text)
 	output := strings.Fields(loweredText)
-
-	// fmt.Printf("loweredText: %v\n", loweredText)
-	// fmt.Printf("Output: %v\n", output)
-	// fmt.Printf("Output[0]: %v\n", output[0])
 	return output
+}
+
+func startRepl() {
+	scanner := bufio.NewScanner(os.Stdin)
+	for {
+		fmt.Print("Pokedex > ")
+		var input string
+		if scanner.Scan() {
+			input = scanner.Text()
+		}
+		cleaned := cleanInput(input)
+		command, ok := commandMap()[cleaned[0]]
+		if ok {
+			err := command.callback()
+			if err != nil {
+				fmt.Println(command.callback())
+			}
+			continue
+		} else {
+			fmt.Println("Unknown command")
+			continue
+		}
+	}
 }
