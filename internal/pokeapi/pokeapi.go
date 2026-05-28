@@ -20,23 +20,33 @@ type LocArea struct {
 
 func PokeApi_LocAreaResponse(config *Config, link *string) LocArea {
 	if link == nil {
-		fmt.Println("\nYou reached the end of the list\n")
+		fmt.Println()
+		fmt.Println("You reached the end of the list")
+		fmt.Println()
 		return LocArea{}
 	}
-	res, err := http.Get(*link)
-	if err != nil {
-		log.Fatal(err)
+
+	body, exists := config.Cache.Get(*link)
+
+	if !exists {
+		res, err := http.Get(*link)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer res.Body.Close()
+		body, err = io.ReadAll(res.Body)
+		if res.StatusCode > 299 {
+			log.Fatalf("Response failed with status code: %d and\nbody: %s\n", res.StatusCode, body)
+		}
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
-	body, err := io.ReadAll(res.Body)
-	defer res.Body.Close()
-	if res.StatusCode > 299 {
-		log.Fatalf("Response failed with status code: %d and\nbody: %s\n", res.StatusCode, body)
-	}
-	if err != nil {
-		log.Fatal(err)
-	}
+
+	config.Cache.Add(*link, body)
+
 	var locArea LocArea
-	err = json.Unmarshal(body, &locArea)
+	err := json.Unmarshal(body, &locArea)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -1,11 +1,18 @@
 package main
 
-import pk "github.com/o-zakh/pokedexcli/internal/pokeapi"
+import (
+	"time"
+
+	pk "github.com/o-zakh/pokedexcli/internal/pokeapi"
+	cache "github.com/o-zakh/pokedexcli/internal/pokecache"
+)
 
 func main() {
+
 	url := "https://pokeapi.co/api/v2/location-area/"
 	config := pk.Config{
-		Next: &url,
+		Next:  &url,
+		Cache: cache.NewCache(5 * time.Second),
 	}
 	startRepl(&config)
 }

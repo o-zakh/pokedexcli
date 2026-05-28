@@ -13,7 +13,7 @@ type cliCommand struct {
 	callback    func(config *pk.Config) error
 }
 
-func commandsMap(config *pk.Config) map[string]cliCommand {
+func commandsMap() map[string]cliCommand {
 	return map[string]cliCommand{
 		"exit": {
 			name:        "exit",
@@ -46,10 +46,11 @@ func commandExit(config *pk.Config) error {
 
 func commandHelp(config *pk.Config) error {
 	fmt.Printf("\nWelcome to the Pokedex!\nUsage:\n")
-	for _, value := range commandsMap(config) {
+	for _, value := range commandsMap() {
 		fmt.Printf("\n%v: %v", value.name, value.description)
 	}
-	fmt.Println("\n")
+	fmt.Println()
+	fmt.Println()
 	return nil
 }
 

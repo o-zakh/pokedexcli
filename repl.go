@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"strings"
 
@@ -22,9 +23,12 @@ func startRepl(config *pk.Config) {
 		var input string
 		if scanner.Scan() {
 			input = scanner.Text()
+			if err := scanner.Err(); err != nil {
+				log.Fatalf("reading stdin: %v", err)
+			}
 		}
 		cleaned := cleanInput(input)
-		command, ok := commandsMap(config)[cleaned[0]]
+		command, ok := commandsMap()[cleaned[0]]
 		if ok {
 			err := command.callback(config)
 			if err != nil {

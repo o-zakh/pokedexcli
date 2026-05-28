@@ -37,11 +37,3 @@ func TestCleanInput(t *testing.T) {
 		}
 	}
 }
-
-// func TestCommandExit(t *testing.T) {
-// 	cases := []struct {
-// 		input string
-// 		expected string
-// 	}
-
-// }
