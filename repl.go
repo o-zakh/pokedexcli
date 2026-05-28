@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	pk "github.com/o-zakh/pokedexcli/internal/pokeapi"
 )
 
 func cleanInput(text string) []string {
@@ -13,7 +15,7 @@ func cleanInput(text string) []string {
 	return output
 }
 
-func startRepl() {
+func startRepl(config *pk.Config) {
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("Pokedex > ")
@@ -22,11 +24,11 @@ func startRepl() {
 			input = scanner.Text()
 		}
 		cleaned := cleanInput(input)
-		command, ok := commandMap()[cleaned[0]]
+		command, ok := commandsMap(config)[cleaned[0]]
 		if ok {
-			err := command.callback()
+			err := command.callback(config)
 			if err != nil {
-				fmt.Println(command.callback())
+				fmt.Println(err)
 			}
 			continue
 		} else {
