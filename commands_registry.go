@@ -45,6 +45,11 @@ func commandsMap() map[string]cliCommand {
 			description: "Make an attempt to catch a Pokémon specified as an argument. ex: catch pikachu",
 			callback:    commandCatch,
 		},
+		"inspect": {
+			name:        "inspect",
+			description: "Inspect a Pokémon in your Pokedex. ex: inspect pikachu",
+			callback:    commandInspect,
+		},
 	}
 }
 
@@ -78,19 +83,43 @@ func commandExplore(config *pk.Config, param string) error {
 	return nil
 }
 
-func commandCatch(config *pk.Config, param string) error {
-	if param == "" {
+func commandCatch(config *pk.Config, pokemonName string) error {
+	if pokemonName == "" {
 		fmt.Println("Input the name of the Pokémon you would like to catch as an argument. ex: catch pikachu")
 		return nil
 	}
-	pokemon, caught := pk.Pokeapi_CatchAttempt(config, param)
+	pokemon, caught := pk.Pokeapi_CatchAttempt(config, pokemonName)
 	if caught {
-		config.Pokedex[param] = pokemon
-		fmt.Printf("%v was caught!", param)
+		config.Pokedex[pokemonName] = pokemon
+		fmt.Printf("%v was caught!", pokemonName)
 		fmt.Println()
 	} else {
-		fmt.Printf("%v escaped!", param)
+		fmt.Printf("%v escaped!", pokemonName)
 		fmt.Println()
+	}
+	return nil
+}
+
+func commandInspect(config *pk.Config, pokemonName string) error {
+	if pokemonName == "" {
+		fmt.Println("Input the name of the Pokémon in your Pokedex you would like to inspect. ex: inspect pikachu")
+		return nil
+	}
+	info, exists := config.Pokedex[pokemonName]
+	if exists {
+		fmt.Println("Name:", info.Name)
+		fmt.Println("Height:", info.Height)
+		fmt.Println("Weight:", info.Weight)
+		fmt.Println("Stats:")
+		for _, value := range info.Stats {
+			fmt.Printf(" -%v: %v\n", value.Stat.Name, value.BaseStat)
+		}
+		fmt.Println("Types:")
+		for _, value := range info.Types {
+			fmt.Printf(" - %v\n", value.Type.Name)
+		}
+	} else {
+		fmt.Println("You have not caught that pokemon")
 	}
 	return nil
 }
