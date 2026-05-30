@@ -18,11 +18,10 @@ type LocArea struct {
 	} `json:"results"`
 }
 
-func PokeApi_LocAreaResponse(config *Config, link *string) LocArea {
+func Pokeapi_LocAreaResponse(config *Config, link *string) LocArea {
 	if link == nil {
 		fmt.Println()
 		fmt.Println("You reached the end of the list")
-		fmt.Println()
 		return LocArea{}
 	}
 
@@ -56,12 +55,12 @@ func PokeApi_LocAreaResponse(config *Config, link *string) LocArea {
 }
 
 func Pokeapi_LocAreaForward(config *Config) {
-	locArea := PokeApi_LocAreaResponse(config, config.Next)
+	locArea := Pokeapi_LocAreaResponse(config, config.Next)
 	Pokeapi_LocAreaNameList(locArea)
 }
 
 func Pokeapi_LocAreaBack(config *Config) {
-	locArea := PokeApi_LocAreaResponse(config, config.Previous)
+	locArea := Pokeapi_LocAreaResponse(config, config.Previous)
 	Pokeapi_LocAreaNameList(locArea)
 }
 

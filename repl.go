@@ -19,7 +19,7 @@ func cleanInput(text string) []string {
 func startRepl(config *pk.Config) {
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
-		fmt.Print("Pokedex > ")
+		fmt.Print("\nPokedex > ")
 		var input string
 		if scanner.Scan() {
 			input = scanner.Text()
@@ -28,9 +28,17 @@ func startRepl(config *pk.Config) {
 			}
 		}
 		cleaned := cleanInput(input)
+		if len(cleaned) == 0 {
+			fmt.Println("Input a command. Enter 'help' to an available commands list")
+			continue
+		}
 		command, ok := commandsMap()[cleaned[0]]
 		if ok {
-			err := command.callback(config)
+			param := ""
+			if len(cleaned) > 1 {
+				param = cleaned[1]
+			}
+			err := command.callback(config, param)
 			if err != nil {
 				fmt.Println(err)
 			}
