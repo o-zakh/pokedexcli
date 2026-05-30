@@ -8,4 +8,5 @@ type Config struct {
 	Next     *string
 	Previous *string
 	Cache    *cache.Cache
+	Pokedex  map[string]PokemonInfo
 }

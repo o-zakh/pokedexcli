@@ -11,8 +11,9 @@ func main() {
 
 	url := "https://pokeapi.co/api/v2/location-area/"
 	config := pk.Config{
-		Next:  &url,
-		Cache: cache.NewCache(60 * time.Second),
+		Next:    &url,
+		Cache:   cache.NewCache(60 * time.Second),
+		Pokedex: make(map[string]pk.PokemonInfo),
 	}
 	startRepl(&config)
 }
